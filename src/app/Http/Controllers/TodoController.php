@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Todo;
+use App\Comment;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class TodoController extends Controller
 {
@@ -15,7 +17,8 @@ class TodoController extends Controller
     public function index()
     {
         //
-        $todos = Todo::all();
+        $todos = Todo::with('comment')->get();
+        Log::debug('$todos="' .$todos. '"');
 
         return view('todo.index', compact('todos'));
     }
@@ -40,9 +43,14 @@ class TodoController extends Controller
     public function store(Request $request)
     {
         //
-	$todo = new Todo();
-    	$todo->title = $request->input('title');
-	$todo->save();
+	    $todo = new Todo();
+        $todo->title = $request->input('title');
+        $todo->save();
+
+        $comment = new Comment([
+            'body' => 'comment',
+        ]);
+        $todo->comment()->save($comment);
 
     	return redirect('todos')->with(
        		'status',

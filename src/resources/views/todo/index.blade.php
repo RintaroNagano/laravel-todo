@@ -37,6 +37,7 @@
                                     <button class="btn btn-danger" type="submit">削除</button>
                                 </form>
                             </td>
+                            <td>{{ $todo->comment->body ?? 'No comment' }}</td>
                         </tr>
                         @endforeach
                     </tbody>
